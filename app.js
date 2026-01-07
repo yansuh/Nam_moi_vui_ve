@@ -1,4 +1,4 @@
-const targetTime = new Date("February 17, 2026 00:00:00").getTime();
+const targetTime = new Date("Feb 17, 2026 00:00:00").getTime();
 let audioAutoplayed = false;
 let audioFallbackEnabled = false;
 let timerInterval = null;
