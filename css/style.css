@@ -1,0 +1,630 @@
+
+* {
+	position: relative;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
+	backface-visibility: hidden;
+}
+
+/* Tối ưu canvas rendering */
+html,
+body {
+	height: 100%;
+	overflow: hidden;
+	touch-action: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+html {
+	background-color: #000;
+}
+
+body {
+	color: rgba(255, 255, 255, 0.5);
+	font-family: "Dancing Script", cursive;
+	line-height: 1.25;
+	letter-spacing: 0.06em;
+	text-rendering: optimizeSpeed;
+}
+
+/* CLASSES TIỆN ÍCH TỐI ƯU */
+.hide {
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none !important;
+	transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.remove {
+	display: none !important;
+}
+
+.blur {
+	filter: blur(8px);
+	transition: filter 0.3s ease;
+}
+
+/* CONTAINER CHÍNH */
+.container {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	will-change: transform;
+	contain: layout style;
+}
+
+/* LOADING SCREEN */
+.loading-init {
+	width: 100%;
+	align-self: center;
+	text-align: center;
+	text-transform: uppercase;
+	will-change: opacity;
+}
+.loading-init__header {
+	font-size: 2.2em;
+	animation: pulse 2s ease-in-out infinite;
+}
+.loading-init__status {
+	margin-top: 1em;
+	font-size: 0.8em;
+	opacity: 0.75;
+}
+
+/* STAGE CONTAINER - TỐI ƯU GPU */
+.stage-container {
+	overflow: hidden;
+	box-sizing: initial;
+	border: 1px solid #222;
+	margin: -1px;
+	transform: translateZ(0);
+	backface-visibility: hidden;
+}
+@media (max-width: 840px) {
+	.stage-container {
+		border: none;
+		margin: 0;
+	}
+}
+
+/* CANVAS CONTAINER - TỐI ƯU RENDERING */
+.canvas-container {
+	width: 100%;
+	height: 100%;
+	transition: filter 0.3s;
+	transform: translateZ(0);
+}
+.canvas-container canvas {
+	position: absolute;
+	mix-blend-mode: lighten;
+	transform: translateZ(0);
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-crisp-edges;
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+	will-change: transform;
+}
+
+/* CONTROLS - TỐI ƯU TOUCH */
+.controls {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	padding-bottom: 50px;
+	display: flex;
+	justify-content: space-between;
+	transition: opacity 0.3s, visibility 0.3s;
+	z-index: 100;
+	pointer-events: none;
+}
+.controls .btn {
+	pointer-events: auto;
+}
+@media (min-width: 840px) {
+	.controls {
+		visibility: visible;
+	}
+	.controls.hide:hover {
+		opacity: 1;
+	}
+}
+
+/* MENU - TỐI ƯU PERFORMANCE */
+.menu {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.85);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+				visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	contain: strict;
+}
+.menu__inner-wrap {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 90%;
+	max-width: 500px;
+	max-height: 85vh;
+	padding: 30px 20px;
+	background: rgba(20, 20, 20, 0.95);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 16px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+	overflow: hidden;
+	will-change: transform, opacity;
+}
+.menu__header {
+	margin-top: 5px;
+	margin-bottom: 12px;
+	font-size: 2em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.9);
+}
+.menu__subheader {
+	margin-bottom: 20px;
+	font-size: 0.86em;
+	opacity: 0.8;
+	color: rgba(255, 255, 255, 0.7);
+}
+.menu form {
+	width: 100%;
+	max-width: 400px;
+	padding: 0 10px;
+	margin-right: 80px;
+	max-height: 60vh;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+.menu form::-webkit-scrollbar {
+	width: 6px;
+}
+.menu form::-webkit-scrollbar-track {
+	background: transparent;
+}
+.menu form::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 3px;
+}
+.menu .form-option {
+	display: flex;
+	align-items: center;
+	margin: 16px 0;
+	padding: 10px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	transition: opacity 0.2s ease;
+	will-change: opacity;
+}
+.menu .form-option label {
+	display: block;
+	width: 50%;
+	padding-right: 20px;
+	text-align: right;
+	text-transform: uppercase;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	color: rgba(255, 255, 255, 0.8);
+	cursor: pointer;
+}
+.menu .form-option--select select {
+	display: block;
+	width: 50%;
+	height: 36px;
+	padding: 0 12px;
+	font-size: 1rem;
+	font-family: "Dancing Script", cursive;
+	color: rgba(255, 255, 255, 0.9);
+	letter-spacing: 0.06em;
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 8px;
+	outline: none;
+	transition: all 0.2s ease;
+	cursor: pointer;
+	appearance: none;
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	background-size: 20px;
+}
+.menu .form-option--select select:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+	border-color: rgba(255, 255, 255, 0.4);
+}
+.menu .form-option--select select:focus {
+	border-color: #09f;
+	box-shadow: 0 0 0 2px rgba(0, 153, 255, 0.2);
+}
+.menu .form-option--select select option {
+	background-color: rgba(20, 20, 20, 0.95);
+	color: rgba(255, 255, 255, 0.9);
+}
+.menu .form-option--checkbox input {
+	display: block;
+	width: 24px;
+	height: 24px;
+	margin: 0;
+	opacity: 0.8;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	background: rgba(255, 255, 255, 0.1);
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-radius: 6px;
+	transition: all 0.2s ease;
+}
+.menu .form-option--checkbox input:checked {
+	background: #09f;
+	border-color: #09f;
+}
+.menu .form-option--checkbox input:checked::after {
+	content: '';
+	position: absolute;
+	top: 4px;
+	left: 8px;
+	width: 6px;
+	height: 12px;
+	border: solid white;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+@media (max-width: 840px) {
+	.menu .form-option select,
+	.menu .form-option input {
+		outline: none;
+		min-height: 44px;
+	}
+}
+
+/* BUTTONS - TỐI ƯU INTERACTION */
+.btn {
+	opacity: 0.7;
+	width: 50px;
+	height: 50px;
+	min-width: 50px;
+	min-height: 50px;
+	display: flex;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	background: rgba(0, 0, 0, 0.4);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 10px;
+	backface-visibility: hidden;
+	will-change: transform, opacity;
+	touch-action: manipulation;
+}
+.btn--bright {
+	opacity: 0.9;
+	background: rgba(255, 255, 255, 0.15);
+}
+@media (min-width: 840px) {
+	.btn:hover {
+		opacity: 1;
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.4);
+		transform: scale(1.1);
+	}
+	.btn--bright:hover {
+		opacity: 1;
+		transform: scale(1.1);
+	}
+}
+.btn svg {
+	display: block;
+	margin: auto;
+	width: 24px;
+	height: 24px;
+	fill: white;
+	transition: transform 0.2s ease;
+}
+
+/* CREDITS */
+.credits {
+	margin-top: 25px;
+	margin-bottom: 10px;
+	padding-top: 15px;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+	font-size: 0.8em;
+	opacity: 0.75;
+	text-align: center;
+	line-height: 1.6;
+}
+.credits a {
+	color: rgba(100, 200, 255, 0.8);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+.credits a:hover,
+.credits a:active {
+	color: #09f;
+	text-decoration: underline;
+}
+
+/* HELP MODAL - TỐI ƯU ANIMATION */
+.help-modal {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	visibility: hidden;
+	transition-property: visibility;
+	transition-duration: 0.25s;
+	z-index: 2000;
+	contain: strict;
+}
+.help-modal__overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	opacity: 0;
+	transition-property: opacity;
+	transition-timing-function: ease-in;
+	transition-duration: 0.25s;
+	background: rgba(0, 0, 0, 0.8);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+.help-modal__dialog {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 500px;
+	max-height: calc(90vh - 100px);
+	margin: 10px;
+	padding: 25px;
+	border-radius: 16px;
+	background-color: rgba(20, 20, 30, 0.95);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	opacity: 0;
+	transform: translateY(20px) scale(0.95);
+	transition-property: opacity, transform;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 0.3s;
+	will-change: transform, opacity;
+	box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+@media (min-width: 840px) {
+	.help-modal__dialog {
+		font-size: 1.1rem;
+		max-width: 550px;
+	}
+}
+.help-modal__header {
+	font-size: 1.8em;
+	text-transform: uppercase;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.95);
+	margin-bottom: 15px;
+}
+.help-modal__body {
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	margin: 1em 0;
+	padding: 1em 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.15);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.8);
+	max-height: 50vh;
+	scrollbar-width: thin;
+}
+.help-modal__body::-webkit-scrollbar {
+	width: 6px;
+}
+.help-modal__body::-webkit-scrollbar-track {
+	background: transparent;
+}
+.help-modal__body::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 3px;
+}
+.help-modal__close-btn {
+	flex-shrink: 0;
+	outline: none;
+	border: none;
+	border-radius: 10px;
+	padding: 12px 30px;
+	margin-top: 20px;
+	font-family: "Dancing Script", cursive;
+	font-size: 1em;
+	font-weight: 600;
+	color: white;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	background: linear-gradient(135deg, #09f 0%, #0cf 100%);
+	transition: all 0.2s ease;
+	cursor: pointer;
+	touch-action: manipulation;
+}
+.help-modal__close-btn:hover,
+.help-modal__close-btn:active,
+.help-modal__close-btn:focus {
+	color: #fff;
+	background: linear-gradient(135deg, #0cf 0%, #09f 100%);
+	transform: translateY(-2px);
+	box-shadow: 0 10px 20px rgba(0, 153, 255, 0.3);
+}
+.help-modal.active {
+	visibility: visible;
+	transition-duration: 0.4s;
+}
+.help-modal.active .help-modal__overlay {
+	opacity: 1;
+	transition-timing-function: ease-out;
+	transition-duration: 0.4s;
+}
+.help-modal.active .help-modal__dialog {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	transition-timing-function: ease-out;
+	transition-duration: 0.4s;
+}
+
+/* ANIMATIONS TỐI ƯU */
+@keyframes pulse {
+	0%, 100% {
+		opacity: 0.7;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.05);
+	}
+}
+
+/* RESPONSIVE TỐI ƯU CHO MOBILE */
+@media (max-width: 768px) {
+	.loading-init__header {
+		font-size: 1.8em;
+	}
+	
+	.controls {
+		padding: 20px;
+	}
+	
+	.btn {
+		width: 44px;
+		height: 44px;
+		min-width: 44px;
+		min-height: 44px;
+	}
+	
+	.btn svg {
+		width: 20px;
+		height: 20px;
+	}
+	
+	.menu__inner-wrap {
+		width: 95%;
+		padding: 25px 20px;
+	}
+	
+	.menu form {
+		margin-right: 0;
+		max-height: 65vh;
+	}
+	
+	.menu .form-option {
+		flex-direction: column;
+		align-items: flex-start;
+		margin: 14px 0;
+	}
+	
+	.menu .form-option label {
+		width: 100%;
+		text-align: left;
+		padding-right: 0;
+		margin-bottom: 8px;
+	}
+	
+	.menu .form-option--select select,
+	.menu .form-option--checkbox input {
+		width: 100%;
+	}
+	
+	.help-modal__dialog {
+		width: 95%;
+		padding: 20px;
+	}
+	
+	.help-modal__header {
+		font-size: 1.5em;
+	}
+	
+	.help-modal__close-btn {
+		padding: 14px 30px;
+		width: 100%;
+	}
+}
+
+/* TỐI ƯU CHO TOUCH DEVICES */
+@media (hover: none) and (pointer: coarse) {
+	.btn:hover {
+		transform: none;
+		background: rgba(0, 0, 0, 0.4);
+	}
+	
+	.btn:active {
+		transform: scale(0.95);
+		background: rgba(255, 255, 255, 0.1);
+	}
+	
+	.menu .form-option label {
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+	}
+	
+	.menu .form-option--select select,
+	.menu .form-option--checkbox input {
+		min-height: 48px;
+	}
+}
+
+/* GIẢM ANIMATION KHI TIẾT KIỆM NĂNG LƯỢNG */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+	
+	.loading-init__header {
+		animation: none;
+	}
+	
+	.btn {
+		transition: none;
+	}
+	
+	.menu,
+	.help-modal {
+		transition: none;
+	}
+}
+
+/* TỐI ƯU SCROLLBAR CHUNG */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.3);
+}

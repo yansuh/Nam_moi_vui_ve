@@ -1,0 +1,218 @@
+/* --- 1. RESET & BASE STYLES (GIỮ NGUYÊN) --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    position: relative;
+    background: #1a0000; /* Màu nền tối để nổi bật hiệu ứng */
+}
+
+/* --- 2. CONTAINER CHÍNH (GIỮ NGUYÊN) --- */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    transition: opacity 0.5s ease;
+}
+
+/* --- 3. TIÊU ĐỀ & ĐẾM NGƯỢC (GIỮ NGUYÊN STYLE GỐC) --- */
+.main-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 5rem;
+    color: #FFD700;
+    line-height: 1.2;
+    text-shadow: 3px 3px 0 #d63031, 0 0 30px rgba(255, 215, 0, 0.7);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.sub-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.8rem;
+    color: #FFD700;
+    margin-bottom: 60px;
+    text-shadow: 2px 2px 0 #d63031;
+    text-align: center;
+}
+
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+}
+
+.time-box {
+    background: linear-gradient(145deg, #e63946, #8b0000);
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid #FFD700;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.number {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.label {
+    font-size: 1.1rem;
+    color: #FFD700;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* --- 4. STYLE CHO BAO LÌ XÌ (MỚI) --- */
+.lixi-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: zoomIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lixi {
+    width: 180px;
+    height: 280px;
+    background: linear-gradient(145deg, #d42020, #8b0000);
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    cursor: pointer;
+    border: 3px solid #ffd700;
+    transition: transform 0.3s ease;
+}
+
+.lixi:hover {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.lixi-top {
+    position: absolute;
+    top: 0; width: 100%; height: 80px;
+    background: #b31a1a;
+    border-radius: 12px 12px 50% 50%;
+    border-bottom: 4px solid #ffd700;
+}
+
+.lixi-button {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px; height: 70px;
+    background: #ffd700;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    color: #d42020;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* --- 5. STYLE CHO THIỆP CHÚC MỪNG (GIỮ STYLE QUESTION-BOX CỦA BẠN) --- */
+.ready-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.question-box {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 50px 40px;
+    max-width: 700px;
+    width: 95%;
+    border: 3px solid rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.3);
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+}
+
+.question {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.8rem;
+    color: #FFD700;
+    margin-bottom: 40px;
+    line-height: 1.4;
+}
+
+.ready-btn {
+    background: linear-gradient(145deg, #FFD700 0%, #FF8C00 100%);
+    color: #330000;
+    border: none;
+    padding: 20px 50px;
+    font-size: 1.6rem;
+    font-weight: 900;
+    border-radius: 60px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.4s;
+    box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+}
+
+.ready-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(255, 69, 0, 0.6);
+}
+
+/* --- 6. HIỆU ỨNG TIỀN BẮN RA (MỚI) --- */
+.money-particle {
+    position: fixed;
+    font-size: 30px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: moneyExplode 2s ease-out forwards;
+}
+
+@keyframes moneyExplode {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(720deg); opacity: 0; }
+}
+
+/* --- 7. CÁC ANIMATION HỖ TRỢ (GIỮ NGUYÊN) --- */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* --- 8. RESPONSIVE (GIỮ NGUYÊN) --- */
+@media (max-width: 768px) {
+    .main-title { font-size: 3.2rem; }
+    .sub-title { font-size: 1.8rem; }
+    .time-box { width: 120px; height: 120px; }
+    .number { font-size: 3rem; }
+    .question { font-size: 2rem; }
+}

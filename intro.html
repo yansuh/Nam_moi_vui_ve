@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陈燕书🩵</title>
+    
+    <!-- Font chữ chính -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font fallback cho Great Vibes -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="intro.css">
+    
+    <style>
+        /* CSS inline để đảm bảo font hiển thị ngay */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background-image: url('background1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #8B0000;
+            background-attachment: fixed;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        /* Audio status */
+        .audio-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.95);
+            color: #8B0000;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            border: 2px solid #FFD700;
+        }
+        
+        .audio-status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio element -->
+    <audio id="tetAudio" loop preload="auto">
+        <source src="nhac.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ âm thanh.
+    </audio>
+    
+    <!-- Audio status indicator -->
+    <div class="audio-status" id="audioStatus">🎵 Đang khởi tạo nhạc Tết...</div>
+    
+    <div class="container">
+        <h1 class="main-title">Chúc Mừng Năm Mới</h1>
+        <h2 class="sub-title">Thời gian đến Tết Bính Ngọ:</h2>
+
+        <div class="countdown-container">
+            <div class="time-box">
+                <span class="label">Ngày</span>
+                <span class="number" id="days">00</span>
+            </div>
+            <div class="time-box">
+                <span class="label">Giờ</span>
+                <span class="number" id="hours">00</span>
+            </div>
+            <div class="time-box">
+                <span class="label">Phút</span>
+                <span class="number" id="minutes">00</span>
+            </div>
+            <div class="time-box">
+                <span class="label">Giây</span>
+                <span class="number" id="seconds">00</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
